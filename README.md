@@ -16,7 +16,3 @@ You are free to use this or any other code from this repository for your own pro
 Any code feedback is wellcome. 
 
 Code created by Toomas Erik Anijärv and Jules Mitchell January 2024.
-
-1. Matlab: EEG recordings processed with EEGLAB and files exported in .mat, .csv, and .set formats.
-2. Python: Processed data (.set files) epoched with MNE, and complexity measures calculated using Neurokit2.Data exported as csv.
-3. R: Data analysed using BRMS (STAN backend) mixed effect models.
