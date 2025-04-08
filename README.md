@@ -13,6 +13,6 @@ Note, the code is structured according to the file types specific to our data. T
 
 You are free to use this or any other code from this repository for your own projects and publications. Citation or reference to the repository is not required, but would be much appreciated (see more on README.md).
 
-Any code feedback is wellcome. 
+Any code feedback is welcome. 
 
 Code created by Toomas Erik Anijärv and Jules Mitchell January 2024.
