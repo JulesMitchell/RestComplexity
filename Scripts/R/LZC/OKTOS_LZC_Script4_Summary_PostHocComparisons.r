@@ -47,26 +47,32 @@ marginalmeans_responder <- finalModel %>%
     as.data.frame() %>% 
       mutate(across(is.numeric, round, digits=4))
 
-# Interactions (First, visualise the nature of interactions)
-# Shows changes with time across participants
-fig1 <- emmip(finalModel, Responder ~ Timepoint | Task, CIs = TRUE, col = "black",
-  linearg = list(), facetlab = 'label_value', xlab = 'Timepoint', ylab = "LZC", tlab = ('Response Status'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
+# Interactions
+#Figure 3. Condition-by-timepoint interaction across response status
+fig1 <- emmip(finalModel, Responder ~ Task | Timepoint , CIs = TRUE, 
+      linearg = list(size = 1.5, linetype = "blank"),  # Increase line width for visibility
+      facetlab = 'label_value', 
+      xlab = 'Condition', 
+      ylab = "Lempel-Ziv Complexity",
+      tlab = 'Response Status',
+      dotarg = list(size = 3),  # Slightly larger dots for better visibility
+      CIarg = list(lwd = 2, alpha = 0.5)) + 
+    theme(text = element_text(size = 18),  # Increase overall text size
+          legend.position = "bottom") + 
+    scale_color_brewer(palette = "Set1")
 
-# Shows changes with time broken down by task/response status
-fig2 <- emmip(finalModel, ~ Timepoint | Responder*Task, CIs = TRUE, col = "black",
-  linearg = list(), facetlab = 'label_value', xlab = 'Timepoint', ylab = "LZC", tlab = ('Response Status'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
-
-# Shows task differences are consistent across time/response status
-fig3 <- emmip(finalModel, ~ Task | Responder*Timepoint, CIs = TRUE, col = "black",
-  linearg = list(linetype = 'blank'), facetlab = 'label_value', xlab = 'Task', ylab = "LZC", tlab = ('Response Status'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
-
-# Shows response status differences are different across task/time
-fig4 <- emmip(finalModel, ~ Responder | Task*Timepoint, CIs = TRUE, col = "black",
-  linearg = list(linetype = 'blank'), facetlab = 'label_value', xlab = 'Response Status', ylab = "LZC", dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
+#Figure 4. Responder-by-timepoint interaction across condition
+fig2 <- emmip(finalModel, Responder ~ Timepoint | Task, CIs = TRUE, 
+       linearg = list(size = 1.5),  # Increase line width for visibility
+       facetlab = 'label_value', 
+       xlab = 'Timepoint', 
+       ylab = "Lempel-Ziv Complexity", 
+       tlab = ('Response Status'), 
+       dotarg = list(size = 3),  # Slightly larger dots for better visibility
+       CIarg = list(lwd = 2, alpha = 0.5)) + 
+      theme(text = element_text(size = 18),  # Increase overall text size
+      legend.position = "bottom") + 
+      scale_color_brewer(palette = "Set1")
 
 ## ## ----- Post-Hoc Comparisons (Marginal Means)--------------
 # We are interested responder differences at each timepoint (Saved to marginal means for export)
@@ -88,5 +94,3 @@ write.xlsx(marginalmeans, outputFile, sheetName="LZC_MarginalMeans",  append=TRU
 setwd('')
 ggsave("LZC_Interaction1.jpeg", plot = fig1, width = 10, height = 10)
 ggsave("LZC_Interaction2.jpeg", plot = fig2, width = 10, height = 10)
-ggsave("LZC_Interaction3.jpeg", plot = fig3, width = 10, height = 10)
-ggsave("LZC_Interaction4.jpeg", plot = fig4, width = 10, height = 10)

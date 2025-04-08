@@ -2,10 +2,9 @@
 ## ----pkgload, include = FALSE-------------------------------------------------
 library(ggplot2)
 library(brms)
-library(dplyr)
+library(emmeans)
 library(tidyverse) 
 library(tidybayes)
-library(emmeans)
 library(bayestestR)
 library(knitr)
 library(kableExtra)
@@ -47,24 +46,48 @@ marginalmeans_responder <-finalModel %>%
     as.data.frame() %>% 
       mutate(across(is.numeric, round, digits=4))
 
-## Interactions
-fig1 <- emmip(finalModel, Responder ~ rep.meas | Task*Timepoint, CIs = TRUE, col = "black",
-linearg = list(), facetlab = 'label_value', xlab = 'Scale', ylab = "Sample Entropy", tlab = ('Response Status'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) + theme(axis.text.x = element_text(angle = 90)) +
-theme_bw() 
-fig1 <- fig1 + theme(axis.text.x = element_text(angle = 90))
+## Interactions plots
+# Figure 1. condition-by-scale interaction
+fig1 <- emmip(finalModel, Task ~ rep.meas | Responder*Timepoint, CIs = TRUE, 
+       linearg = list(size = 1.5),  # Increase line width for visibility
+       facetlab = 'label_value', 
+       xlab = 'Scale', 
+       ylab = "Sample Entropy", 
+       tlab = ('Condition'), 
+       dotarg = list(size = 3),  # Slightly larger dots for better visibility
+       CIarg = list(lwd = 2, alpha = 0.5)) + 
+     theme(text = element_text(size = 18),  # Increase overall text size
+           legend.position = "bottom") + 
+     scale_color_brewer(palette = "Set1") +
+     scale_x_discrete(labels=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
 
-fig2 <- emmip(finalModel, Task ~ rep.meas | Responder*Timepoint, CIs = TRUE, col = "black",
-  linearg = list(), facetlab = 'label_value', xlab = 'Scale', ylab = "Sample Entropy", tlab = ('Task'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
-fig2 <- fig2 + theme(axis.text.x = element_text(angle = 90))
+# Figure 2. response-by-scale interaction across timepoint and condition
+fig2 <- emmip(finalModel, Responder ~ rep.meas | Task*Timepoint, CIs = TRUE, 
+       linearg = list(size = 1.5),  # Increase line width for visibility
+       facetlab = 'label_value', 
+       xlab = 'Scale', 
+       ylab = "Sample Entropy", 
+       tlab = ('Response Status'), 
+       dotarg = list(size = 3),  # Slightly larger dots for better visibility
+       CIarg = list(lwd = 2, alpha = 0.5)) + 
+     theme(text = element_text(size = 18),  # Increase overall text size
+           legend.position = "bottom") + 
+     scale_color_brewer(palette = "Set1") +
+     scale_x_discrete(labels=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
 
-fig3 <- emmip(finalModel, rep.meas ~ Timepoint | Task*Responder, CIs = TRUE, col = "black",
-  linearg = list(), facetlab = 'label_value', xlab = 'Timepoint', ylab = "Sample Entropy", tlab = ('Scale'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw() 
-
-fig4 <- emmip(finalModel, rep.meas ~ Task | Timepoint , CIs = TRUE, col = "black",
-  linearg = list(), facetlab = 'label_value', xlab = 'Task', ylab = "Sample Entropy", tlab = ('Scale'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw() 
+# Figure 3. Conference poster plot
+fig3 <- emmip(finalModel, Task ~ rep.meas | Timepoint, CIs = TRUE, 
+       linearg = list(size = 1.5),  # Increase line width for visibility
+       facetlab = 'label_value', 
+       xlab = 'Scale', 
+       ylab = "Sample Entropy", 
+       tlab = ('Condition'), 
+       dotarg = list(size = 3),  # Slightly larger dots for better visibility
+       CIarg = list(lwd = 2, alpha = 0.5)) + 
+     theme(text = element_text(size = 18),  # Increase overall text size
+           legend.position = "bottom") + 
+     scale_color_brewer(palette = "Set1") +
+     scale_x_discrete(labels=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
 
 # We are interested responder differences at each timepoint
 marginalmeans_interaction <- finalModel %>% 
@@ -86,4 +109,3 @@ setwd('')
 ggsave("MSE_Interaction1.jpeg", plot = fig1, width = 10, height = 10)
 ggsave("MSE_Interaction2.jpeg", plot = fig2, width = 10, height = 10)
 ggsave("MSE_Interaction3.jpeg", plot = fig3, width = 10, height = 10)
-ggsave("MSE_Interaction4.jpeg", plot = fig4, width = 10, height = 10)

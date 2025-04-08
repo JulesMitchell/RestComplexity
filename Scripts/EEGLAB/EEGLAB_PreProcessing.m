@@ -31,7 +31,7 @@ elseif strcmp(run_for_all, 'All')
     participantIDs = {participantIDs.name};
 
 else
-    return; % User canceled the selection
+    return; % User cancelled the selection
 end
 
 % Prompt user to specify parameters
@@ -86,6 +86,7 @@ IDs = {
     'sub-38', 'sub-39', 'sub-40'
 };
 
+# Defines response status for baseline (response status for subsequent timepoints changed manually). Note, some subsequently withdrew before post-treatment. 
 resp_status = [1,1,0,0,0,1,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0,1,1,1,0,1,1,0];
 
 % Create a dictionary by combining participant IDs and response status

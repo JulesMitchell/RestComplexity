@@ -2,7 +2,6 @@
 ## ----pkgload, include = FALSE-------------------------------------------------
 library(ggplot2)
 library(brms)
-library(dplyr)
 library(tidyverse)
 library(tidybayes) 
 library(emmeans)
@@ -51,19 +50,17 @@ marginalmeans_responder <- finalModel %>%
 ## Interactions
 ## First, visualise the nature of interactions
 # Shows changes with time across participants
-fig1 <- emmip(finalModel, Responder ~ rep.meas | Task*Timepoint, CIs = TRUE, col = "black",
-  linearg = list(linetype = "blank"), facetlab = 'label_value', xlab = 'Channel', ylab = "LZC", tlab = ('Response Status'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
-
-# Shows changes with time broken down by task/response status
-fig2 <- emmip(finalModel, rep.meas ~ Timepoint | Responder*Task, CIs = TRUE, col = "black",
-  linearg = list(), facetlab = 'label_value', xlab = 'Timepoint', ylab = "LZC", tlab = ('Response Status'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
-
-# Shows task differences are consistent across time/response status
-fig3 <- emmip(finalModel, rep.meas ~ Task | Responder*Timepoint, CIs = TRUE, col = "black",
-  linearg = list(linetype = "blank"), facetlab = 'label_value', xlab = 'Task', ylab = "LZC", tlab = ('Response Status'), dotarg = list(size = 2), CIarg = list(alpha = 0.5)) +
-  theme_bw()
+fig1 <- emmip(finalModel, Responder ~ rep.meas | Task*Timepoint, CIs = TRUE, 
+       linearg = list(size = 1.5, linetype='blank'),  # Increase line width for visibility
+       facetlab = 'label_value', 
+       xlab = 'Channel', 
+       ylab = "Lempel-Ziv Complexity", 
+       tlab = ('Response Status'), 
+       dotarg = list(size = 3),  # Slightly larger dots for better visibility
+       CIarg = list(lwd = 2, alpha = 0.5)) + 
+     theme(text = element_text(size = 18),  # Increase overall text size
+           legend.position = "bottom") + 
+     scale_color_brewer(palette = "Set1")
 
 ## Marginal Means
 marginalmeans_interaction <- finalModel %>% # Keep (Shows responder comparisons)
@@ -83,5 +80,3 @@ write.xlsx(marginalmeans, outputFile, sheetName="LZCChan_MarginalMeans",  append
 # Save figures
 setwd('')
 ggsave("LZCchan_Interaction1.jpeg", plot = fig1, width = 10, height = 10)
-ggsave("LZCchan_Interaction2.jpeg", plot = fig2, width = 10, height = 10)
-ggsave("LZCchan_Interaction3.jpeg", plot = fig3, width = 10, height = 10)
